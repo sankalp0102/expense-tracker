@@ -1,6 +1,37 @@
 [
   {
+    "id": 1776963927969,
+    "name": "Food",
+    "amount": 200,
+    "category": "Food",
+    "date": "23/4/2026, 10:35:27 pm"
+  },
+  {
+    "id": 1776964187302,
     "name": "Travel",
-    "amount": 500
+    "amount": 500,
+    "category": "Travel",
+    "date": "23/4/2026, 10:39:47 pm"
+  },
+  {
+    "id": 1776964330606,
+    "name": "Food",
+    "amount": 200,
+    "category": "Food",
+    "date": "23/4/2026, 10:42:10 pm"
+  },
+  {
+    "id": 1776964330688,
+    "name": "Travel",
+    "amount": 500,
+    "category": "Travel",
+    "date": "23/4/2026, 10:42:10 pm"
+  },
+  {
+    "id": 1776964330796,
+    "name": "Lunch",
+    "amount": 150,
+    "category": "Food",
+    "date": "23/4/2026, 10:42:10 pm"
   }
 ]
