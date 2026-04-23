@@ -1,74 +1,88 @@
-const fs = require('fs');
+const fs = require("fs");
 
-// Load data
-function loadExpenses() {
-    try {
-        const dataBuffer = fs.readFileSync('data.json');
-        return JSON.parse(dataBuffer.toString());
-    } catch {
-        return [];
-    }
+const fileName = "data.json";
+
+// Read data
+function readData() {
+    if (!fs.existsSync(fileName)) return [];
+    const data = fs.readFileSync(fileName);
+    return JSON.parse(data);
 }
 
-// Save data
-function saveExpenses(expenses) {
-    fs.writeFileSync('data.json', JSON.stringify(expenses, null, 2));
+// Write data
+function writeData(data) {
+    fs.writeFileSync(fileName, JSON.stringify(data, null, 2));
 }
 
 // Add expense
 function addExpense(name, amount) {
-    const expenses = loadExpenses();
-    expenses.push({ name, amount });
-    saveExpenses(expenses);
+    const data = readData();
+
+    data.push({
+        name: name,
+        amount: amount
+    });
+
+    writeData(data);
     console.log("✅ Expense added!");
 }
 
 // Show expenses
 function showExpenses() {
-    const expenses = loadExpenses();
+    const data = readData();
 
-    console.log("\n📋 Your Expenses:");
-    if (expenses.length === 0) {
-        console.log("No expenses yet.");
+    if (data.length === 0) {
+        console.log("No expenses found.");
         return;
     }
 
-    expenses.forEach((exp, i) => {
-        console.log(`${i + 1}. ${exp.name} - ₹${exp.amount}`);
+    console.log("\n📋 Your Expenses:\n");
+
+    data.forEach((item, index) => {
+        console.log(`${index + 1}. ${item.name} - ₹${item.amount}`);
     });
+
+    // Total
+    const total = data.reduce((sum, item) => sum + item.amount, 0);
+    console.log(`\n💰 Total: ₹${total}`);
 }
 
 // Delete expense
 function deleteExpense(index) {
-    const expenses = loadExpenses();
+    const data = readData();
 
-    if (index < 1 || index > expenses.length) {
+    const realIndex = index - 1;
+
+    if (realIndex >= 0 && realIndex < data.length) {
+        data.splice(realIndex, 1);
+        writeData(data);
+        console.log("🗑️ Expense deleted!");
+    } else {
         console.log("❌ Invalid index");
-        return;
     }
-
-    const removed = expenses.splice(index - 1, 1);
-    saveExpenses(expenses);
-
-    console.log(`🗑️ Deleted: ${removed[0].name}`);
 }
 
-// ---- COMMAND HANDLING ----
+// Commands
 const command = process.argv[2];
 
-if (command === 'add') {
+if (command === "add") {
     const name = process.argv[3];
     const amount = parseFloat(process.argv[4]);
-    addExpense(name, amount);
-}
-else if (command === 'list') {
+
+    if (!name || isNaN(amount)) {
+        console.log("❌ Please provide valid input.");
+    } else {
+        addExpense(name, amount);
+    }
+
+} else if (command === "list") {
     showExpenses();
-}
-else if (command === 'delete') {
+
+} else if (command === "delete") {
     const index = parseInt(process.argv[3]);
     deleteExpense(index);
-}
-else {
+
+} else {
     console.log(`
 Usage:
 node app.js add "item" amount
